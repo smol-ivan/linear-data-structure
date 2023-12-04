@@ -3,7 +3,8 @@
 #include "nodo_generico_d.h"
 
 template <typename T>
-class ListaLigadaD {
+class ListaLigadaD
+{
 public:
     ListaLigadaD();
     ~ListaLigadaD();
@@ -18,18 +19,19 @@ public:
     void hacerVacia();
     bool esVacia() const;
     int getNumTlementos() const;
-    
+    bool intercambiar(NodoD<T> *p, NodoD<T> *q);
+
 private:
     NodoD<T> *cabeza;
     NodoD<T> *cola;
     int numTlementos;
     template <typename U>
-    friend std::ostream& operator<<(std::ostream &, const ListaLigadaD<U> &);
+    friend std::ostream &operator<<(std::ostream &, const ListaLigadaD<U> &);
 };
 
-
 template <typename T>
-ListaLigadaD<T>::ListaLigadaD() {
+ListaLigadaD<T>::ListaLigadaD()
+{
     cabeza = new NodoD<T>();
     cola = new NodoD<T>();
     cabeza->siguiente = cola;
@@ -37,100 +39,137 @@ ListaLigadaD<T>::ListaLigadaD() {
     numTlementos = 0;
 }
 
-
 /*
  Libera la memoria ocupada por todos los nodos de la lista.
  */
 template <typename T>
-ListaLigadaD<T>::~ListaLigadaD() {
+ListaLigadaD<T>::~ListaLigadaD()
+{
     hacerVacia();
     delete cabeza;
     delete cola;
 }
 
-
 template <typename T>
-NodoD<T> *ListaLigadaD<T>::fin() const {
+NodoD<T> *ListaLigadaD<T>::fin() const
+{
     return cola;
 }
 
-
 template <typename T>
-bool ListaLigadaD<T>::insertar(T x, NodoD<T> *p) {
-    // implementar
+bool ListaLigadaD<T>::insertar(T x, NodoD<T> *p)
+{
+    NodoD<T> *nuevo = new NodoD<T>();
+    nuevo->elem = x;
+    nuevo->siguiente = p;
+    nuevo->previo = p->previo;
+    p->previo->siguiente = nuevo;
+    p->previo = nuevo;
     return true;
 }
 
-
 template <typename T>
-bool ListaLigadaD<T>::eliminar(NodoD<T> *p) {
-    // implementar
+bool ListaLigadaD<T>::eliminar(NodoD<T> *p)
+{
+    p->previo->siguiente = p->siguiente;
+    p->siguiente->previo = p->previo;
+    delete p;
     return true;
 }
 
-
 template <typename T>
-NodoD<T> *ListaLigadaD<T>::buscar(T x) const {
-    // implementar
+NodoD<T> *ListaLigadaD<T>::buscar(T x) const
+{
+    NodoD<T> *p = cabeza->siguiente;
+    while (p->elem != x && p->siguiente != cola)
+        p = p->siguiente;
+    if (p->elem != x)
+        p = NULL;
     return p;
 }
 
-
 template <typename T>
-T ListaLigadaD<T>::obtener(NodoD<T> *p) const {
+T ListaLigadaD<T>::obtener(NodoD<T> *p) const
+{
     return p->elem;
 }
 
-
 template <typename T>
-NodoD<T> *ListaLigadaD<T>::primera() const {
+NodoD<T> *ListaLigadaD<T>::primera() const
+{
     return cabeza->siguiente;
 }
 
-
 template <typename T>
-NodoD<T> *ListaLigadaD<T>::siguiente(NodoD<T> *p) const {
+NodoD<T> *ListaLigadaD<T>::siguiente(NodoD<T> *p) const
+{
     return p->siguiente;
 }
 
-
 template <typename T>
-NodoD<T> *ListaLigadaD<T>::anterior(NodoD<T> *p) const {
+NodoD<T> *ListaLigadaD<T>::anterior(NodoD<T> *p) const
+{
     return p->previo;
 }
 
-
 template <typename T>
-void ListaLigadaD<T>::hacerVacia() {
-    // implementar
+void ListaLigadaD<T>::hacerVacia()
+{
+    while (!esVacia())
+    {
+        cabeza = cabeza->siguiente;
+        delete cabeza->previo;
+    }
+    cabeza->previo = NULL;
 }
 
-
 template <typename T>
-bool ListaLigadaD<T>::esVacia() const {
-    // implementar
+bool ListaLigadaD<T>::esVacia() const
+{
+    return (cabeza->siguiente == cola);
 }
 
-
 template <typename T>
-int ListaLigadaD<T>::getNumTlementos() const {
+int ListaLigadaD<T>::getNumTlementos() const
+{
     return numTlementos;
 }
 
+template <typename T>
+bool ListaLigadaD<T>::intercambiar(NodoD<T> *p, NodoD<T> *q)
+{
+    NodoD<T> *tempPreviop = p->previo;
+    NodoD<T> *tempSigp = p->siguiente;
+    p->previo->siguiente = q;
+    p->siguiente->previo = q;
+    q->previo->siguiente = p;
+    q->siguiente->previo = p;
+    p->siguiente = q->siguiente;
+    p->previo = q->previo;
+    q->siguiente = tempSigp;
+    q->previo = tempPreviop;
+
+    return true;
+}
 
 template <typename T>
-std::ostream& operator<<(std::ostream &strm, const ListaLigadaD<T> &lista) {
+std::ostream &operator<<(std::ostream &strm, const ListaLigadaD<T> &lista)
+{
     std::string elem = "";
     NodoD<T> *pos = lista.primera();
-    if (std::string(typeid(T).name()).compare("c") != 0) {
-        while (pos != lista.fin()) {
+    if (std::string(typeid(T).name()).compare("c") != 0)
+    {
+        while (pos != lista.fin())
+        {
             elem += std::to_string(lista.obtener(pos)) + ", ";
             pos = lista.siguiente(pos);
         }
     }
-    else {
-        while (pos != lista.fin()) {
-            elem += (char) lista.obtener(pos);
+    else
+    {
+        while (pos != lista.fin())
+        {
+            elem += (char)lista.obtener(pos);
             elem += ", ";
             pos = lista.siguiente(pos);
         }

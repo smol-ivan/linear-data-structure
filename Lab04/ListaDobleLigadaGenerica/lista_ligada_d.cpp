@@ -1,23 +1,23 @@
 #include <iostream>
 #include <string>
 
-#include "lista_ligada_generica_d2.h"
+#include "lista_ligada_generica_d.h"
 
 using namespace std;
 
+int main()
+{
+    ListaLigadaD<int> lista;
 
-int main() {
-    ListaLigadaD<int> le;
-    ListaLigadaD<double> ld;
-    ListaLigadaD<char> lc;
+    lista.insertar(1, lista.fin());
+    lista.insertar(2, lista.fin());
+    lista.insertar(3, lista.fin());
 
-    for (int i=0; i < 5; i++) {
-        le.insertar(i, le.fin());
-        ld.insertar((double) i / 5.0, ld.fin());
-        lc.insertar((char) (97+i), lc.fin());
-    }
+    cout << lista << endl;
 
-    cout << le << endl;
-    cout << ld << endl;
-    cout << lc << endl;
+    lista.intercambiar(lista.buscar(1), lista.buscar(3));
+
+    cout << lista << endl;
+
+    return EXIT_SUCCESS;
 }
