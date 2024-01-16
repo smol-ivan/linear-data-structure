@@ -46,14 +46,14 @@ int buscarBin(vector<int> A, int x) {
 
 int main() {
 
-    int TAM_ARREGLO = 1000;
+    int TAM_ARREGLO = 100000000;
     vector<int> A;
     
     for (int i = 0; i < TAM_ARREGLO; i++)
         A.insert(A.end(), i);
 
     srand((unsigned) time(0));
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 30; i++) {
         int x = rand() % TAM_ARREGLO;
     
         int s = buscarSec(A, x);
